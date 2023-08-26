@@ -12,8 +12,8 @@ then
 
 else
 	
-	mkdir -p .${writefile}
-	if [[ $? -eq 0 ]];
+	ret=$(mkdir -p .${writefile})
+	if [[ ${ret} -eq 0 ]];
 	then
 		rm -r .${writefile}
 		touch .${writefile}

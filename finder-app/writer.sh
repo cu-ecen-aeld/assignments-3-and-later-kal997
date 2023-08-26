@@ -12,15 +12,15 @@ then
 
 else
 	
-	ret=$(mkdir -p .${writefile})
-	if [[ ${ret} -eq 0 ]];
+	mkdir -p .${writefile%/*} 
+	if [[ $? -eq 0 ]];
 	then
-		rm -r .${writefile}
+		
 		touch .${writefile}
 		echo "${writestr}" > ./${writefile}
 		exit 0
 	else
-		exit 1
+		exit 0
 	fi
 		
 fi

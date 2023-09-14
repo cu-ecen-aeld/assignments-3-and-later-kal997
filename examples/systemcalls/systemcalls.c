@@ -1,5 +1,11 @@
 #include "systemcalls.h"
-
+#include<stdlib.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+#include<sys/stat.h>
+#include<fcntl.h>
 /**
  * @param cmd the command to execute with system()
  * @return true if the command in @param cmd was executed
@@ -17,7 +23,19 @@ bool do_system(const char *cmd)
  *   or false() if it returned a failure
 */
 
-    return true;
+	bool retVal;
+	int errStatus = system(cmd);
+	if(errStatus >0)
+	{
+		retVal = false;
+	}  
+	else
+	{
+		retVal = true;
+		
+	}
+
+    return retVal;
 }
 
 /**
@@ -58,10 +76,58 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+	int status;
+	bool retVal;
+	pid_t childPid = fork();
+	if(childPid > 0) // parent
+	{
+		printf("PARENT: created child pid is %d\n", childPid);
+		int terminatedProcess = wait(&status);
+		printf("PARENT: process %d is terminated with %d\n", terminatedProcess, WEXITSTATUS(status));
+		if(WEXITSTATUS(status) != EXIT_FAILURE)
+		{
+			retVal = true;	
+		}
+		else
+		{	
+			
+			retVal = false;
+		}
+	}	
+	else if(childPid == 0) // child
+	{
+		printf("CHILD: executing the given command\n");
+		
+		if(command[0][0] == '/')
+		{
+			int childExecRetVal = execv(command[0], command	);
+		
+			if(childExecRetVal == -1)
+			{
+				perror("exec error\n");
+				exit(EXIT_FAILURE);
+			}
+
+			
+		}
+		else
+		{
+			printf("not an absolute path\n");
+			exit(EXIT_FAILURE);
+			
+		}
+		
+	}
+	else
+	{
+		perror("In fork():\n");
+		retVal = false;
+	}
+	
 
     va_end(args);
 
-    return true;
+    return retVal;
 }
 
 /**
@@ -91,9 +157,77 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   redirect standard out to a file specified by outputfile.
  *   The rest of the behaviour is same as do_exec()
  *
-*/
+*/	
+	bool retVal ;
+	int kidpid;
+	int status;
+	int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 0644);
+	if (fd < 0) 
+	{ 	
+		printf("can not open the given file\n");
+		perror("open");
+	
+		abort(); 
+	}
+	else
+	{
+		printf("hi\n");
+	}
+	
+	kidpid = fork();
+	switch (kidpid) 
+	{
+  	case -1: 
+  		perror("fork");
+  		retVal = false; 
+  		abort();
+  	case 0:
+  		printf("comamnd[0]=%s, command[1] = %s\n",command[0], command[1]);
+    		if (dup2(fd, 1) < 0) 
+    		{ 
+    			
+    			perror("dup2");
+    			 
+    			abort(); 
+    		}
+    		
+    		close(fd);
+    		
+    			 
+    			int execvRetVal = execv(command[0], command);
+    			if(execvRetVal == -1)
+    			{
+    				perror("execv"); 
+    				retVal = false;
+    				exit(EXIT_FAILURE);
+    				
+    			} 
+    			
+    		
+  	default:
+   	 	close(fd);
+    	
+    	
+    		printf("PARENT: created child pid is %d\n", kidpid);
+		int terminatedProcess = wait(&status);
+		printf("PARENT: process %d is terminated with %d\n", terminatedProcess, WEXITSTATUS(status));
+		if(WEXITSTATUS(status) != EXIT_FAILURE)
+		{
+			retVal = true;	
+		}
+		else
+		{	
+			
+			retVal = false;
+		}
+	}
+
+
+
+
+
 
     va_end(args);
 
-    return true;
+    return retVal;
 }

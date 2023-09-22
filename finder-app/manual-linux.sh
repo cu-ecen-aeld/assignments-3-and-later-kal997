@@ -15,7 +15,7 @@ ARCH=arm64
 CROSS_COMPILE=aarch64-none-linux-gnu-
 CROSS_COMPILER_PATH=/home/khaled/arm-cross-compiler/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu
 FINDER_APP_PATH=/home/khaled/Desktop/Linux-system-programming/week2/assignments-3-and-later-kal997/finder-app
-
+echo "khaled soliman"
 if [ $# -lt 1 ]
 then
 	echo "Using default directory ${OUTDIR} for output"

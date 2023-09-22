@@ -8,6 +8,7 @@ set -u
 BUSYBOX_INSTALLED_FLAG=0
 OUTDIR=/tmp/aeld
 KERNEL_REPO=git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+PATCH_REPO=https://github.com/kal997/linux-v5.1.10-patch.git
 KERNEL_VERSION=v5.1.10
 BUSYBOX_VERSION=1_33_1
 FINDER_APP_DIR=$(realpath $(dirname $0))
@@ -37,7 +38,7 @@ if [ ! -d "${OUTDIR}/linux-stable" ]; then
 	
 	cd ${OUTDIR}
 	git clone ${KERNEL_REPO} --depth 1 --single-branch --branch ${KERNEL_VERSION}
-	
+	git clone ${PATCH_REPO}
 fi
 
 
@@ -53,7 +54,7 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
 	
 	echo "applying patch"
 	rm ${OUTDIR}/linux-stable/scripts/dtc/dtc-lexer.l
-	cp ${FINDER_APP_PATH}/dtc-lexer.l ./scripts/dtc/dtc-lexer.l
+	cp ${OUTDIR}linux-v5.1.10-patch/dtc-lexer.l ./scripts/dtc/dtc-lexer.l
     # TODO: Add your kernel build steps here
 	echo "*******deep clean*********"
 	make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- mrproper

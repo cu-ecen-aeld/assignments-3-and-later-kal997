@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+
 
 
 num_of_input_params=$#

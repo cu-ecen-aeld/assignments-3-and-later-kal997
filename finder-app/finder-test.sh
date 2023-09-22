@@ -10,6 +10,8 @@ WRITESTR=AELD_IS_FUN
 WRITEDIR=/tmp/aeld-data
 username=$(cat conf/username.txt)
 
+
+
 if [ $# -lt 3 ]
 then
 	echo "Using default value ${WRITESTR} for string to write"
@@ -29,41 +31,41 @@ MATCHSTR="The number of files are ${NUMFILES} and the number of matching lines a
 
 echo "Writing ${NUMFILES} files containing string ${WRITESTR} to ${WRITEDIR}"
 
-rm -rf "${WRITEDIR}"
+
 
 # create $WRITEDIR if not assignment1
-assignment=`cat ../conf/assignment.txt`
+assignment=`cat conf/assignment.txt`
 
-if [ $assignment != 'assignment1' ]
-then
-	mkdir -p "$WRITEDIR"
+echo "Removing the old writer utility and compiling as a native application"
 
-	#The WRITEDIR is in quotes because if the directory path consists of spaces, then variable substitution will consider it as multiple argument.
-	#The quotes signify that the entire string in WRITEDIR is a single string.
-	#This issue can also be resolved by using double square brackets i.e [[ ]] instead of using quotes.
-	if [ -d "$WRITEDIR" ]
-	then
-		echo "$WRITEDIR created"
-	else
-		exit 1
-	fi
-fi
-#echo "Removing the old writer utility and compiling as a native application"
-#make clean
 #make
 
+mkdir -p tmp/aeld-data
+echo "creating a directory"
 for i in $( seq 1 $NUMFILES)
-do
-	./writer.sh "$WRITEDIR/${username}$i.txt" "$WRITESTR"
+do	
+	
+	echo "######"
+	
+	touch ./tmp/aeld-data/kal997$i.txt
+	./writer tmp/aeld-data/kal997$i.txt $WRITESTR
+	
 done
 
-OUTPUTSTRING=$(./finder.sh "$WRITEDIR" "$WRITESTR")
 
-# remove temporary directories
-rm -rf /tmp/aeld-data
+OUTPUTSTRING=$(./finder.sh "$WRITEDIR/" "$WRITESTR")
+
+for i in $( seq 1 $NUMFILES)
+do	
+	rm tmp/aeld-data/kal997$i.txt 
+	touch tmp/aeld-data/kal997$i.txt
+done
+
+echo $OUTPUTSTRING
+pwd
 
 set +e
-echo ${OUTPUTSTRING} | grep "${MATCHSTR}"
+echo "${OUTPUTSTRING}" | grep "${MATCHSTR}"
 if [ $? -eq 0 ]; then
 	echo "success"
 	exit 0
@@ -71,3 +73,8 @@ else
 	echo "failed: expected  ${MATCHSTR} in ${OUTPUTSTRING} but instead found"
 	exit 1
 fi
+
+rm -r tmp
+echo "removing tmp directory"
+
+

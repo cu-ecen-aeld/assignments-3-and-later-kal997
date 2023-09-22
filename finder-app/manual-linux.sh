@@ -30,8 +30,7 @@ if [ ! -d ${OUTDIR} ]; then
 fi
 
 echo "############listing contents##############"
-ls
-pwd
+ls /tmp/aesd-autograder/
 echo "#########################################"
 
 

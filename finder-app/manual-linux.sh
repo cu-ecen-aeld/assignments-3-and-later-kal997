@@ -15,7 +15,7 @@ ARCH=arm64
 CROSS_COMPILE=aarch64-none-linux-gnu-
 CROSS_COMPILER_PATH=/home/khaled/arm-cross-compiler/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu
 FINDER_APP_PATH=/home/khaled/Desktop/Linux-system-programming/week2/assignments-3-and-later-kal997/finder-app
-echo "khaled soliman"
+
 if [ $# -lt 1 ]
 then
 	echo "Using default directory ${OUTDIR} for output"
@@ -29,9 +29,6 @@ if [ ! -d ${OUTDIR} ]; then
 	cd "$OUTDIR"
 fi
 
-echo "############listing contents##############"
-ls /tmp/aesd-autograder/
-echo "#########################################"
 
 
 if [ ! -d "${OUTDIR}/linux-stable" ]; then
@@ -40,7 +37,9 @@ if [ ! -d "${OUTDIR}/linux-stable" ]; then
 	
 	ls ${OUTDIR}
 	git clone ${KERNEL_REPO} --depth 1 --single-branch --branch ${KERNEL_VERSION}
+	mv linux-stable/ ${OUTDIR}
 fi
+
 
 
 if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
@@ -52,9 +51,13 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     echo "Checking out version ${KERNEL_VERSION}"
     git checkout ${KERNEL_VERSION}
 	
+	echo "applying patch"
+	rm ${OUTDIR}linux-stable/scripts/dtc/dtc-lexer.l
+	cp ${FINDER_APP_PATH}/dtc-lexer.l ./scripts/dtc/dtc-lexer.l
     # TODO: Add your kernel build steps here
-	#echo "*******deep clean*********"
-	#make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- mrproper
+	echo "*******deep clean*********"
+	make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- mrproper
+	
 	echo "*******build defconfig*********"
 	make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- defconfig
 	echo "*******build the kernel*********"

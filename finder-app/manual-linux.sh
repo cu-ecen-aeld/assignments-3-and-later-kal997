@@ -54,7 +54,7 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
 	
 	echo "applying patch"
 	rm ${OUTDIR}/linux-stable/scripts/dtc/dtc-lexer.l
-	cp ${OUTDIR}linux-v5.1.10-patch/dtc-lexer.l ./scripts/dtc/dtc-lexer.l
+	cp ${OUTDIR}/linux-v5.1.10-patch/dtc-lexer.l ./scripts/dtc/dtc-lexer.l
     # TODO: Add your kernel build steps here
 	echo "*******deep clean*********"
 	make ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu- mrproper

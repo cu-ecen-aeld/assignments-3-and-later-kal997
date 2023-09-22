@@ -52,7 +52,7 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     git checkout ${KERNEL_VERSION}
 	
 	echo "applying patch"
-	rm ${OUTDIR}linux-stable/scripts/dtc/dtc-lexer.l
+	rm ${OUTDIR}/linux-stable/scripts/dtc/dtc-lexer.l
 	cp ${FINDER_APP_PATH}/dtc-lexer.l ./scripts/dtc/dtc-lexer.l
     # TODO: Add your kernel build steps here
 	echo "*******deep clean*********"

@@ -29,6 +29,10 @@ if [ ! -d ${OUTDIR} ]; then
 	cd "$OUTDIR"
 fi
 
+echo "############listing contents##############"
+ls
+echo "#########################################"
+
 
 if [ ! -d "${OUTDIR}/linux-stable" ]; then
     #Clone only if the repository does not exist.

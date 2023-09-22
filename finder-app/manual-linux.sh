@@ -35,9 +35,9 @@ if [ ! -d "${OUTDIR}/linux-stable" ]; then
     #Clone only if the repository does not exist.
 	echo "CLONING GIT LINUX STABLE VERSION ${KERNEL_VERSION} IN ${OUTDIR}"
 	
-	ls ${OUTDIR}
+	cd ${OUTDIR}
 	git clone ${KERNEL_REPO} --depth 1 --single-branch --branch ${KERNEL_VERSION}
-	mv linux-stable/ ${OUTDIR}
+	
 fi
 
 

@@ -127,11 +127,11 @@ ${CROSS_COMPILE}readelf -a busybox | grep "program interpreter"
 ${CROSS_COMPILE}readelf -a busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
-cp ${CROSS_COMPILER_PATH}/libc/lib64/libc.so.6 ${OUTDIR}/rootfs/lib64/
-cp ${CROSS_COMPILER_PATH}/libc/lib64/libresolv.so.2 ${OUTDIR}/rootfs/lib64/
-cp ${CROSS_COMPILER_PATH}/libc/lib64/libm.so.6 ${OUTDIR}/rootfs/lib64/
+cp ${OUTDIR}/linux-v5.1.10-patch/libc.so.6 ${OUTDIR}/rootfs/lib64/
+cp ${OUTDIR}/linux-v5.1.10-patch/libresolv.so.2 ${OUTDIR}/rootfs/lib64/
+cp ${OUTDIR}/linux-v5.1.10-patch/libm.so.6 ${OUTDIR}/rootfs/lib64/
 
-cp ${CROSS_COMPILER_PATH}/libc/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/
+cp ${OUTDIR}/linux-v5.1.10-patch/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib/
 
 
 # TODO: Make device nodes
@@ -144,7 +144,7 @@ sudo mknod -m 666 dev/tty c 5 0
 sudo chown root:tty /dev/{console,ptmx,tty}
 
 # TODO: Clean and build the writer utility
-cd ${FINDER_APP_PATH}
+cd ${OUTDIR}/linux-v5.1.10-patch/
 aarch64-none-linux-gnu-gcc -o writer writer.c 
 cp writer ${OUTDIR}/rootfs/home/
 cp new.txt ${OUTDIR}/rootfs/home/
